@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== FERRETERIA PRODUCTOS ==================== -->
+
+    <!-- Vista Lista de Productos -->
+    <record id="view_ferreteria_producto_list" model="ir.ui.view">
+        <field name="name">ferreteria.producto.list</field>
+        <field name="model">ferreteria.producto</field>
+        <field name="arch" type="xml">
+            <list string="Productos de Ferretería" decoration-danger="estado == 'agotado'" decoration-warning="estado == 'bajo_stock'">
+                <field name="codigo"/>
+                <field name="name"/>
+                <field name="categoria_id"/>
+                <field name="stock_actual"/>
+                <field name="stock_minimo"/>
+                <field name="unidad_medida"/>
+                <field name="precio_costo" widget="monetary"/>
+                <field name="precio_venta" widget="monetary"/>
+                <field name="estado" widget="badge"
+                       decoration-danger="estado == 'agotado'"
+                       decoration-warning="estado == 'bajo_stock'"
+                       decoration-success="estado == 'disponible'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Formulario de Productos -->
+    <record id="view_ferreteria_producto_form" model="ir.ui.view">
+        <field name="name">ferreteria.producto.form</field>
+        <field name="model">ferreteria.producto</field>
+        <field name="arch" type="xml">
+            <form string="Producto de Ferretería">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nombre del Producto"/>
+                        <h1>
+                            <field name="name" placeholder="Ej. Martillo Tubular 16oz"/>
+                        </h1>
+                        <h3>
+                            <field name="codigo" placeholder="Código / SKU (Ej. HER-001)"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group string="Clasificación y Ubicación">
+                            <field name="categoria_id"/>
+                            <field name="unidad_medida"/>
+                            <field name="ubicacion" placeholder="Ej. Pasillo 2, Estante A-4"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Control de Inventario y Precios">
+                            <field name="stock_actual"/>
+                            <field name="stock_minimo"/>
+                            <field name="precio_costo"/>
+                            <field name="precio_venta"/>
+                            <field name="estado" widget="badge"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista Búsqueda / Filtros de Productos -->
+    <record id="view_ferreteria_producto_search" model="ir.ui.view">
+        <field name="name">ferreteria.producto.search</field>
+        <field name="model">ferreteria.producto</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Productos">
+                <field name="name" string="Producto" filter_domain="['|', ('name', 'ilike', self), ('codigo', 'ilike', self)]"/>
+                <field name="categoria_id"/>
+                <field name="ubicacion"/>
+                <separator/>
+                <filter string="En Stock" name="filter_disponible" domain="[('estado', '=', 'disponible')]"/>
+                <filter string="Stock Bajo" name="filter_bajo_stock" domain="[('estado', '=', 'bajo_stock')]"/>
+                <filter string="Agotados" name="filter_agotado" domain="[('estado', '=', 'agotado')]"/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Categoría" name="group_by_categoria" context="{'group_by': 'categoria_id'}"/>
+                    <filter string="Estado" name="group_by_estado" context="{'group_by': 'estado'}"/>
+                    <filter string="Ubicación" name="group_by_ubicacion" context="{'group_by': 'ubicacion'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana para Productos -->
+    <record id="action_ferreteria_producto" model="ir.actions.act_window">
+        <field name="name">Productos de Ferretería</field>
+        <field name="res_model">ferreteria.producto</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ferreteria_producto_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea el primer producto de la ferretería
+            </p>
+            <p>
+                Gestiona herramientas, tornillos, tuberías, pinturas y material eléctrico con control de stock y precios.
+            </p>
+        </field>
+    </record>
+
+    <!-- ==================== CATEGORÍAS ==================== -->
+
+    <record id="view_ferreteria_categoria_list" model="ir.ui.view">
+        <field name="name">ferreteria.categoria.list</field>
+        <field name="model">ferreteria.categoria</field>
+        <field name="arch" type="xml">
+            <list string="Categorías" editable="bottom">
+                <field name="name"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_ferreteria_categoria" model="ir.actions.act_window">
+        <field name="name">Categorías de Ferretería</field>
+        <field name="res_model">ferreteria.categoria</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ==================== MENÚS ==================== -->
+
+    <!-- Menú Raíz -->
+    <menuitem id="menu_ferreteria_root"
+              name="Ferretería"
+              web_icon="inventario_test,static/description/icon.png"
+              sequence="10"/>
+
+    <!-- Menú Inventario (Primero) -->
+    <menuitem id="menu_ferreteria_inventario"
+              name="Inventario"
+              parent="menu_ferreteria_root"
+              sequence="1"/>
+
+    <menuitem id="menu_ferreteria_productos"
+              name="Productos"
+              parent="menu_ferreteria_inventario"
+              action="action_ferreteria_producto"
+              sequence="1"/>
+
+    <!-- Dashboard integrado de Spreadsheet Dashboard (Al lado) -->
+    <menuitem id="menu_ferreteria_dashboard"
+              name="Dashboard"
+              parent="menu_ferreteria_root"
+              action="spreadsheet_dashboard.ir_actions_dashboard_action"
+              sequence="20"/>
+
+    <!-- Menú Configuración -->
+    <menuitem id="menu_ferreteria_configuracion"
+              name="Configuración"
+              parent="menu_ferreteria_root"
+              sequence="90"/>
+
+    <menuitem id="menu_ferreteria_categorias"
+              name="Categorías"
+              parent="menu_ferreteria_configuracion"
+              action="action_ferreteria_categoria"
+              sequence="10"/>
+
+</odoo>

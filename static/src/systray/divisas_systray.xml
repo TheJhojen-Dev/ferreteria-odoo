@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="inventario_test.DivisasSystray">
+        <div class="o_divisas_systray d-flex align-items-center me-2">
+            <Dropdown position="'bottom-end'">
+                <!-- Botón visible en la barra superior (Por defecto muestra Dólar a 2 decimales) -->
+                <button class="btn btn-sm btn-outline-secondary d-flex align-items-center px-2 py-1 border-0 fw-bold"
+                        style="background: rgba(44, 62, 80, 0.08); border-radius: 6px; font-size: 13px;"
+                        title="Tasa oficial BCV (Clic para ver Euro y actualizar)">
+                    <span class="badge bg-success me-1 text-white" style="font-size: 11px;">$</span>
+                    <span class="text-dark">
+                        <t t-if="state.loading">
+                            <i class="fa fa-circle-o-notch fa-spin"/>
+                        </t>
+                        <t t-else="">
+                            <t t-esc="state.usd.toFixed(2)"/> Bs.
+                        </t>
+                    </span>
+                    <i class="fa fa-caret-down ms-1 text-muted"/>
+                </button>
+
+                <!-- Panel desplegable con Dólar, Euro y botón de recarga -->
+                <t t-set-slot="content">
+                    <div class="p-3" style="min-width: 230px; font-size: 13px;">
+                        <div class="d-flex justify-content-between align-items-center pb-2 mb-2 border-bottom">
+                            <span class="fw-bold text-dark">Tasas Oficiales (BCV)</span>
+                            <button class="btn btn-sm btn-link text-primary p-0"
+                                    t-on-click.stop="fetchTasas"
+                                    title="Actualizar tasas ahora">
+                                <i class="fa fa-refresh" t-att-class="{'fa-spin': state.loading}"/>
+                            </button>
+                        </div>
+
+                        <!-- Fila Dólar Oficial -->
+                        <div class="d-flex justify-content-between align-items-center py-1">
+                            <span class="d-flex align-items-center">
+                                <span class="badge bg-success me-2" style="font-size: 11px;">USD</span>
+                                <span>Dólar</span>
+                            </span>
+                            <span class="fw-bold text-dark">
+                                <t t-esc="state.usd.toFixed(2)"/> Bs.
+                            </span>
+                        </div>
+
+                        <!-- Fila Euro Oficial -->
+                        <div class="d-flex justify-content-between align-items-center py-1">
+                            <span class="d-flex align-items-center">
+                                <span class="badge bg-primary me-2" style="font-size: 11px;">EUR</span>
+                                <span>Euro</span>
+                            </span>
+                            <span class="fw-bold text-dark">
+                                <t t-esc="state.eur.toFixed(2)"/> Bs.
+                            </span>
+                        </div>
+
+                        <!-- Pie informativo -->
+                        <div class="pt-2 mt-2 border-top text-muted" style="font-size: 11px;">
+                            <span>Fuente: dolarapi.com</span>
+                        </div>
+                    </div>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+</templates>

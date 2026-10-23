@@ -1,0 +1,29 @@
+{
+  "version": 16,
+  "sheets": [
+    {
+      "id": "sheet1",
+      "name": "Inventario Ferretería",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "cols": {
+        "0": { "size": 120 },
+        "1": { "size": 220 },
+        "2": { "size": 140 },
+        "3": { "size": 100 },
+        "4": { "size": 100 },
+        "5": { "size": 100 },
+        "6": { "size": 120 }
+      },
+      "rows": {
+        "0": { "size": 35 }
+      },
+      "cells": {}
+    }
+  ],
+  "entities": {},
+  "styles": {},
+  "formats": {},
+  "borders": {},
+  "revisionId": "START_REVISION"
+}
